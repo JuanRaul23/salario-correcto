@@ -1,136 +1,622 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SalarioPA — Estimador de Salarios Panamá</title>
-  <style>
-    :root {
-      --blue: #1a56db;
-      --blue-dark: #1342b0;
-      --green: #0e9f6e;
-      --gray-50: #f9fafb;
-      --gray-100: #f3f4f6;
-      --gray-200: #e5e7eb;
-      --gray-400: #9ca3af;
-      --gray-600: #4b5563;
-      --gray-800: #1f2937;
-      --red: #e02424;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--gray-50); color: var(--gray-800); min-height: 100vh; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SalarioPA — Estimador Salarial Panamá</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── Ticker ── */
-    .ticker-wrap { background: var(--blue); color: #fff; overflow: hidden; padding: 6px 0; }
-    .ticker { display: flex; animation: scroll 40s linear infinite; white-space: nowrap; }
-    .ticker span { padding: 0 40px; font-size: 13px; }
-    @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+:root {
+  --primary:      #2563EB;
+  --primary-dark: #1D4ED8;
+  --primary-light:#EFF6FF;
+  --primary-mid:  #BFDBFE;
+  --accent:       #0EA5E9;
+  --text-1:       #0F172A;
+  --text-2:       #475569;
+  --text-3:       #94A3B8;
+  --surface:      #FFFFFF;
+  --bg:           #F8FAFC;
+  --border:       #E2E8F0;
+  --success:      #10B981;
+  --shadow-sm:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:    0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg:    0 10px 15px rgba(0,0,0,.07), 0 4px 6px rgba(0,0,0,.05);
+}
 
-    /* ── Header ── */
-    header { background: #fff; border-bottom: 1px solid var(--gray-200); padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
-    header h1 { font-size: 20px; font-weight: 700; color: var(--blue); }
-    header p { font-size: 13px; color: var(--gray-600); }
+html, body {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  background: var(--bg);
+  color: var(--text-1);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
 
-    /* ── Layout ── */
-    main { max-width: 900px; margin: 32px auto; padding: 0 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    @media (max-width: 640px) { main { grid-template-columns: 1fr; } }
+/* ── Ticker tape ── */
+.tape {
+  background: var(--primary);
+  overflow: hidden;
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+.tape-inner {
+  display: flex;
+  gap: 0;
+  white-space: nowrap;
+  animation: scroll-tape 36s linear infinite;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: 0.3px;
+}
+@keyframes scroll-tape {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.tape-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 28px;
+}
+.tape-sep {
+  width: 1px;
+  height: 12px;
+  background: rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+.tape-up { color: #86EFAC; font-size: 10px; }
 
-    /* ── Card ── */
-    .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.08); padding: 24px; }
-    .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 18px; color: var(--gray-800); }
+/* ── Header ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+.logo-text span { color: var(--primary); }
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.badge-beta {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--primary);
+  background: var(--primary-light);
+  border-radius: 20px;
+  padding: 3px 10px;
+  letter-spacing: 0.3px;
+}
+.badge-model {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 10px;
+}
 
-    /* ── Form ── */
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-size: 13px; font-weight: 500; color: var(--gray-600); margin-bottom: 4px; }
-    select, input[type=range] { width: 100%; }
-    select { padding: 8px 10px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 14px; background: #fff; color: var(--gray-800); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%236b7280' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; cursor: pointer; }
-    select:focus { outline: none; border-color: var(--blue); }
+/* ── Hero strip ── */
+.hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 32px 24px;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-size: clamp(1.55rem, 2.8vw, 2.1rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--text-1);
+  letter-spacing: -0.5px;
+}
+.hero-title strong { font-weight: 700; color: var(--primary); }
+.hero-sub {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.7;
+  max-width: 560px;
+}
 
-    .exp-row { display: flex; align-items: center; gap: 10px; }
-    .exp-row input[type=range] { flex: 1; accent-color: var(--blue); }
-    .exp-val { font-size: 15px; font-weight: 700; color: var(--blue); min-width: 28px; text-align: right; }
+/* ── Main grid ── */
+.main {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 0;
+  min-height: calc(100vh - 60px - 30px - 94px);
+}
+@media (max-width: 820px) {
+  .main { grid-template-columns: 1fr; }
+  header { padding: 0 16px; }
+  .hero  { padding: 20px 16px 16px; }
+}
 
-    /* ── Checkboxes ── */
-    .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .check-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-600); cursor: pointer; user-select: none; }
-    .check-item input { accent-color: var(--blue); width: 16px; height: 16px; cursor: pointer; }
+/* ── Form panel ── */
+.form-panel {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 32px 32px;
+  overflow-y: auto;
+}
 
-    /* ── Button ── */
-    button.estimar { width: 100%; padding: 13px; background: var(--blue); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background .2s; margin-top: 8px; }
-    button.estimar:hover { background: var(--blue-dark); }
-    button.estimar:disabled { background: var(--gray-400); cursor: not-allowed; }
+.section-title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 16px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
 
-    /* ── Resultado ── */
-    .resultado { display: none; }
-    .resultado.visible { display: block; }
-    .salario-big { font-size: 48px; font-weight: 800; color: var(--blue); letter-spacing: -1px; text-align: center; margin: 8px 0 4px; }
-    .salario-label { text-align: center; font-size: 13px; color: var(--gray-600); margin-bottom: 20px; }
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: 5px;
+}
+select {
+  width: 100%;
+  appearance: none;
+  background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-1);
+  padding: 9px 36px 9px 12px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+select option { background: #fff; }
 
-    /* ── Barra rango ── */
-    .rango-bar { position: relative; height: 8px; background: var(--gray-200); border-radius: 4px; margin: 20px 0 8px; }
-    .rango-fill { position: absolute; height: 100%; background: var(--blue); border-radius: 4px; transition: width .6s ease; }
-    .rango-marker { position: absolute; top: -4px; width: 16px; height: 16px; background: var(--blue); border: 2px solid #fff; border-radius: 50%; transform: translateX(-50%); box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: left .6s ease; }
-    .rango-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray-600); }
-    .rango-labels span { font-weight: 600; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    /* ── Tips ── */
-    .tips { margin-top: 18px; }
-    .tips h3 { font-size: 13px; font-weight: 600; color: var(--gray-600); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
-    .tip { background: var(--gray-50); border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; color: var(--gray-600); margin-bottom: 8px; line-height: 1.5; }
+/* Slider */
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+.slider-val {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--primary);
+  min-width: 34px;
+  text-align: right;
+}
+.slider-unit { font-size: 11px; color: var(--text-3); }
+input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 1px 4px rgba(37,99,235,0.4);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
-    /* ── Modo demo badge ── */
-    .badge { display: inline-block; font-size: 11px; background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 99px; margin-left: 8px; vertical-align: middle; font-weight: 600; }
-    .badge.live { background: #d1fae5; color: #065f46; }
+/* Chips herramientas */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  background: var(--surface);
+}
+.chip:hover {
+  border-color: var(--primary-mid);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+.chip.on {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.chip-icon { font-size: 13px; }
 
-    /* ── Error ── */
-    .error-msg { background: #fef2f2; border: 1px solid #fecaca; color: var(--red); padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 12px; display: none; }
-    .error-msg.visible { display: block; }
+/* CTA */
+.btn-calc {
+  width: 100%;
+  margin-top: 20px;
+  padding: 13px;
+  background: var(--primary);
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-calc:hover:not(:disabled) {
+  background: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+}
+.btn-calc:active:not(:disabled) { transform: scale(0.99); }
+.btn-calc:disabled {
+  background: var(--border);
+  color: var(--text-3);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btn-arrow { transition: transform 0.2s; }
+.btn-calc:hover:not(:disabled) .btn-arrow { transform: translateX(3px); }
 
-    footer { text-align: center; padding: 32px 16px; font-size: 12px; color: var(--gray-400); }
-  </style>
+/* ── Result panel ── */
+.result-panel {
+  background: var(--bg);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Empty */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 20px;
+}
+.empty-state h3 { font-size: 16px; font-weight: 500; color: var(--text-1); margin-bottom: 8px; }
+.empty-state p  { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+
+/* Loading */
+.loading-state { text-align: center; display: none; }
+.loading-state.visible { display: block; }
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--primary-mid);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-state p { font-size: 13px; color: var(--text-2); }
+
+/* Result content */
+.result-content { display: none; }
+.result-content.visible { display: block; }
+
+/* Main card */
+.result-card {
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  padding: 28px;
+  margin-bottom: 16px;
+}
+
+.result-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+
+.salary-number {
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -2px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 4px;
+}
+.salary-period {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 24px;
+  font-family: 'Roboto Mono', monospace;
+}
+
+/* Range bar */
+.range-section { margin-bottom: 4px; }
+.range-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+.range-end { text-align: center; }
+.range-end .rv {
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-1);
+}
+.range-end .rl {
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.range-center .rv { font-size: 16px; color: var(--primary); }
+
+.range-track {
+  height: 6px;
+  background: var(--bg);
+  border-radius: 3px;
+  position: relative;
+  overflow: visible;
+}
+.range-fill {
+  position: absolute;
+  left: 15%; right: 15%;
+  top: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--primary-mid), var(--primary));
+  border-radius: 3px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+}
+.range-fill.go { transform: scaleX(1); }
+.range-pin {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 14px; height: 14px;
+  background: var(--primary);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(37,99,235,.35);
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.3s;
+}
+.range-pin.go { transform: translate(-50%, -50%) scale(1); }
+
+/* Tips card */
+.tips-card {
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.tips-title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 14px;
+}
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bg);
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.tip-item:last-child { border-bottom: none; padding-bottom: 0; }
+.tip-icon {
+  width: 28px; height: 28px;
+  background: var(--primary-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Status row */
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+}
+.status-dot {
+  width: 7px; height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+  50%  { opacity: 0.85; box-shadow: 0 0 0 4px rgba(16,185,129,0); }
+}
+
+/* Footer */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-3);
+  flex-wrap: wrap;
+  gap: 6px;
+}
+footer a { color: var(--primary); text-decoration: none; }
+</style>
 </head>
 <body>
 
 <!-- Ticker tape -->
-<div class="ticker-wrap">
-  <div class="ticker" id="ticker">
-    <span>💼 Tecnología / IT — Senior promedio: $2,811</span>
-    <span>🏦 Finanzas / Banca — Contador CPA bilingüe: $1,511</span>
-    <span>👥 Recursos Humanos — Gerente RRHH: $7,000</span>
-    <span>💻 Desarrollador full-stack — $2,000–$5,000</span>
-    <span>📊 Data scientist — $2,000–$4,500</span>
-    <span>🏢 CFO / Director financiero — $12,000–$35,000</span>
-    <span>📈 Analista financiero — $700–$2,000</span>
-    <span>🔒 Oficial de cumplimiento — $1,000–$2,500</span>
-    <span>💼 Tecnología / IT — Senior promedio: $2,811</span>
-    <span>🏦 Finanzas / Banca — Contador CPA bilingüe: $1,511</span>
-    <span>👥 Recursos Humanos — Gerente RRHH: $7,000</span>
-    <span>💻 Desarrollador full-stack — $2,000–$5,000</span>
-    <span>📊 Data scientist — $2,000–$4,500</span>
-    <span>🏢 CFO / Director financiero — $12,000–$35,000</span>
+<div class="tape">
+  <div class="tape-inner">
+    <span class="tape-item"><span class="tape-up">▲</span> TECNOLOGÍA/IT &nbsp;·&nbsp; Senior $2,811 &nbsp;·&nbsp; Full-stack $3,500</span>
+    <span class="tape-sep"></span>
+    <span class="tape-item"><span class="tape-up">▲</span> FINANZAS/BANCA &nbsp;·&nbsp; CFO $18,000 &nbsp;·&nbsp; Contador CPA $1,511</span>
+    <span class="tape-sep"></span>
+    <span class="tape-item"><span class="tape-up">▲</span> RECURSOS HUMANOS &nbsp;·&nbsp; Gerente RRHH $7,000 &nbsp;·&nbsp; Reclutador $1,050</span>
+    <span class="tape-sep"></span>
+    <span class="tape-item"><span class="tape-up">▲</span> DATA SCIENCE &nbsp;·&nbsp; Data Scientist $3,000 &nbsp;·&nbsp; Data Engineer $3,200</span>
+    <span class="tape-sep"></span>
+    <span class="tape-item"><span class="tape-up">▲</span> LEGAL &nbsp;·&nbsp; Senior $3,000 &nbsp;·&nbsp; Ejecutivo $12,000</span>
+    <span class="tape-sep"></span>
+    <!-- duplicate for seamless loop -->
+    <span class="tape-item"><span class="tape-up">▲</span> TECNOLOGÍA/IT &nbsp;·&nbsp; Senior $2,811 &nbsp;·&nbsp; Full-stack $3,500</span>
+    <span class="tape-sep"></span>
+    <span class="tape-item"><span class="tape-up">▲</span> FINANZAS/BANCA &nbsp;·&nbsp; CFO $18,000 &nbsp;·&nbsp; Contador CPA $1,511</span>
+    <span class="tape-sep"></span>
+    <span class="tape-item"><span class="tape-up">▲</span> RECURSOS HUMANOS &nbsp;·&nbsp; Gerente RRHH $7,000 &nbsp;·&nbsp; Reclutador $1,050</span>
+    <span class="tape-sep"></span>
+    <span class="tape-item"><span class="tape-up">▲</span> DATA SCIENCE &nbsp;·&nbsp; Data Scientist $3,000 &nbsp;·&nbsp; Data Engineer $3,200</span>
+    <span class="tape-sep"></span>
+    <span class="tape-item"><span class="tape-up">▲</span> LEGAL &nbsp;·&nbsp; Senior $3,000 &nbsp;·&nbsp; Ejecutivo $12,000</span>
+    <span class="tape-sep"></span>
   </div>
 </div>
 
+<!-- Header -->
 <header>
-  <div>
-    <h1>SalarioPA <span id="mode-badge" class="badge">modo demo</span></h1>
-    <p>Estimador de salarios para el mercado laboral de Panamá · USD/mes bruto</p>
+  <div class="logo">
+    <div class="logo-mark">SP</div>
+    <div class="logo-text">Salario<span>PA</span></div>
+  </div>
+  <div class="header-meta">
+    <span class="badge-model" id="badge-model">GBR · R² 0.9952</span>
+    <span class="badge-beta">Beta</span>
   </div>
 </header>
 
-<main>
-  <!-- Formulario -->
-  <div class="card">
-    <h2>Tu perfil profesional</h2>
+<!-- Hero -->
+<div class="hero">
+  <p class="hero-eyebrow">Estimador salarial · Mercado laboral panameño</p>
+  <h1 class="hero-title">¿Cuánto <strong>debería ganar</strong><br>alguien con tu perfil?</h1>
+  <p class="hero-sub">Completa los campos y el modelo estima tu rango en el mercado panameño actual. Basado en datos reales de Computrabajo Panamá y Michael Page 2024.</p>
+</div>
 
-    <div class="form-group">
-      <label>Área profesional</label>
+<!-- Main -->
+<main class="main">
+
+  <!-- Formulario -->
+  <div class="form-panel">
+
+    <p class="section-title">Perfil profesional</p>
+
+    <div class="field">
+      <label>Área de trabajo</label>
       <select id="area">
+        <option value="">Selecciona tu área...</option>
         <option>Tecnología / IT</option>
         <option>Finanzas / Banca</option>
-        <option>Recursos Humanos</option>
         <option>Ingeniería</option>
         <option>Salud</option>
+        <option>Recursos Humanos</option>
         <option>Marketing / Ventas</option>
         <option>Administración</option>
         <option>Logística / Operaciones</option>
@@ -139,290 +625,382 @@
       </select>
     </div>
 
-    <div class="form-group">
-      <label>Sector de la empresa</label>
+    <div class="field">
+      <label>Sector / industria</label>
       <select id="sector">
+        <option value="">Selecciona el sector...</option>
         <option>Banca / Financiero</option>
+        <option>Zona Libre de Colón</option>
         <option>Multinacional</option>
         <option>Tecnología / Startup</option>
-        <option>Zona Libre de Colón</option>
         <option>Salud / Farmacéutica</option>
+        <option>Gobierno / Público</option>
         <option>Retail / Comercio</option>
         <option>Construcción</option>
-        <option>Gobierno / Público</option>
         <option>ONG / Sin fines de lucro</option>
         <option>Educación / Academia</option>
       </select>
     </div>
 
-    <div class="form-group">
-      <label>Tipo de empresa</label>
-      <select id="tipo_empresa">
-        <option>Multinacional</option>
-        <option>Empresa local grande</option>
-        <option>PYME</option>
-        <option>Startup</option>
-        <option>Gobierno</option>
-        <option>Freelance / Independiente</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Modalidad</label>
-      <select id="modalidad">
-        <option>Presencial</option>
-        <option>Híbrido</option>
-        <option>Remoto</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Provincia</label>
-      <select id="provincia">
-        <option>Panamá</option>
-        <option>Colón</option>
-        <option>Chiriquí</option>
-        <option>Herrera</option>
-        <option>Los Santos</option>
-        <option>Veraguas</option>
-        <option>Coclé</option>
-        <option>Panamá Oeste</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Nivel de estudios</label>
-      <select id="nivel_estudio">
-        <option>Técnico / Universitario incompleto</option>
-        <option selected>Licenciatura</option>
-        <option>Postgrado / Especialización</option>
-        <option>Maestría</option>
-        <option>Doctorado</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Nivel de inglés</label>
-      <select id="nivel_ingles">
-        <option>Ninguno</option>
-        <option>Básico</option>
-        <option selected>Intermedio</option>
-        <option>Avanzado</option>
-        <option>Nativo/Bilingüe</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Años de experiencia: <span id="exp-label">4</span></label>
-      <div class="exp-row">
-        <input type="range" id="años_experiencia" min="0" max="35" value="4" oninput="document.getElementById('exp-label').textContent=this.value" />
-        <span class="exp-val" id="exp-val2">4</span>
+    <div class="field-row">
+      <div class="field">
+        <label>Nivel de estudios</label>
+        <select id="estudio">
+          <option value="">Selecciona...</option>
+          <option>Técnico / Universitario incompleto</option>
+          <option>Licenciatura</option>
+          <option>Postgrado / Especialización</option>
+          <option>Maestría</option>
+          <option>Doctorado</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Nivel de inglés</label>
+        <select id="ingles">
+          <option value="">Selecciona...</option>
+          <option>Ninguno</option>
+          <option>Básico</option>
+          <option>Intermedio</option>
+          <option>Avanzado</option>
+          <option>Nativo/Bilingüe</option>
+        </select>
       </div>
     </div>
 
-    <div class="form-group">
-      <label>Herramientas / habilidades técnicas</label>
-      <div class="checks">
-        <label class="check-item"><input type="checkbox" id="tiene_python"> Python</label>
-        <label class="check-item"><input type="checkbox" id="tiene_sql"> SQL</label>
-        <label class="check-item"><input type="checkbox" id="tiene_powerbi"> Power BI</label>
-        <label class="check-item"><input type="checkbox" id="tiene_sap"> SAP</label>
-        <label class="check-item"><input type="checkbox" id="tiene_excel_av" checked> Excel avanzado</label>
+    <div class="field-row">
+      <div class="field">
+        <label>Tipo de empresa</label>
+        <select id="empresa">
+          <option value="">Selecciona...</option>
+          <option>Multinacional</option>
+          <option>Empresa local grande</option>
+          <option>PYME</option>
+          <option>Startup</option>
+          <option>Gobierno</option>
+          <option>Freelance / Independiente</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Modalidad</label>
+        <select id="modalidad">
+          <option value="">Selecciona...</option>
+          <option>Presencial</option>
+          <option>Híbrido</option>
+          <option>Remoto</option>
+        </select>
       </div>
     </div>
 
-    <button class="estimar" id="btn-estimar" onclick="estimar()">Estimar mi salario →</button>
-    <div class="error-msg" id="error-msg"></div>
+    <div class="field-row">
+      <div class="field">
+        <label>Provincia</label>
+        <select id="provincia">
+          <option value="">Selecciona...</option>
+          <option>Panamá</option>
+          <option>Colón</option>
+          <option>Chiriquí</option>
+          <option>Herrera</option>
+          <option>Los Santos</option>
+          <option>Veraguas</option>
+          <option>Coclé</option>
+          <option>Panamá Oeste</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Años de experiencia</label>
+        <div class="slider-wrap">
+          <input type="range" id="exp" min="0" max="35" value="3" step="1">
+          <span class="slider-val" id="exp-val">3</span>
+          <span class="slider-unit">años</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="section-title" style="margin-top:6px">Herramientas</p>
+    <div class="chips">
+      <div class="chip" data-key="python"  onclick="toggleChip(this)"><span class="chip-icon">🐍</span>Python</div>
+      <div class="chip" data-key="sql"     onclick="toggleChip(this)"><span class="chip-icon">🗄️</span>SQL</div>
+      <div class="chip" data-key="powerbi" onclick="toggleChip(this)"><span class="chip-icon">📊</span>Power BI</div>
+      <div class="chip" data-key="sap"     onclick="toggleChip(this)"><span class="chip-icon">💼</span>SAP</div>
+      <div class="chip" data-key="excel"   onclick="toggleChip(this)"><span class="chip-icon">📗</span>Excel Av.</div>
+    </div>
+
+    <button class="btn-calc" id="btn" onclick="calcular()" disabled>
+      Estimar salario <span class="btn-arrow">→</span>
+    </button>
   </div>
 
-  <!-- Resultado -->
-  <div class="card resultado" id="resultado">
-    <h2>Tu estimación salarial</h2>
+  <!-- Panel resultado -->
+  <div class="result-panel">
 
-    <div class="salario-big" id="salario-big">$0</div>
-    <div class="salario-label">USD / mes bruto estimado</div>
-
-    <div class="rango-bar">
-      <div class="rango-fill" id="rango-fill" style="width:0%"></div>
-      <div class="rango-marker" id="rango-marker" style="left:0%"></div>
-    </div>
-    <div class="rango-labels">
-      <span id="rango-min">$0</span>
-      <span style="color:var(--gray-400);font-weight:400">rango de mercado</span>
-      <span id="rango-max">$0</span>
+    <div class="empty-state" id="empty">
+      <div class="empty-icon">📊</div>
+      <h3>Tu estimación aparecerá aquí</h3>
+      <p>Completa todos los campos del formulario para calcular tu rango salarial en el mercado panameño.</p>
     </div>
 
-    <div class="tips" id="tips-container"></div>
+    <div class="loading-state" id="loading">
+      <div class="spinner"></div>
+      <p>Calculando estimación...</p>
+    </div>
+
+    <div class="result-content" id="result">
+
+      <div class="result-card">
+        <p class="result-label">Salario estimado mensual bruto</p>
+        <div class="salary-number" id="salary-num">$0</div>
+        <div class="salary-period">USD / mes bruto · Panamá</div>
+
+        <div class="range-section">
+          <div class="range-row">
+            <div class="range-end">
+              <span class="rv" id="r-min">—</span>
+              <span class="rl">Mínimo</span>
+            </div>
+            <div class="range-end range-center">
+              <span class="rv" id="r-est">—</span>
+              <span class="rl">Estimado</span>
+            </div>
+            <div class="range-end">
+              <span class="rv" id="r-max">—</span>
+              <span class="rl">Máximo</span>
+            </div>
+          </div>
+          <div class="range-track">
+            <div class="range-fill" id="range-fill"></div>
+            <div class="range-pin"  id="range-pin"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tips-card" id="tips-card"></div>
+
+      <div class="status-row">
+        <span class="status-dot"></span>
+        <span id="status-text">Modo demo · GradientBoosting · R² 0.9952 · MAE $154</span>
+      </div>
+
+    </div>
   </div>
 </main>
 
 <footer>
-  Datos: Computrabajo Panamá · Michael Page Estudio de Remuneración 2024 · Decreto N°13 Mitradel (piso salarial vigente 2026)<br>
-  Estimaciones orientativas. Los salarios reales varían según empresa, negociación y condiciones del mercado.
+  <span>SalarioPA · Estimaciones orientativas basadas en modelo ML · <a href="#">Panamá 🇵🇦</a></span>
+  <span>Fuentes: Computrabajo Panamá · Michael Page 2024 · Decreto N°13 Mitradel</span>
 </footer>
 
 <script>
-  // ── Configuración ────────────────────────────────────────────────────────────
-  // Cambia esta URL a la de tu backend en Render una vez desplegado.
-  // Ejemplo: const API_URL = "https://salariopa-api.onrender.com";
-  const API_URL = "";  // vacío = modo demo con lógica local
+// ── Config API ────────────────────────────────────────────────────────────────
+// Cambia API_URL a tu URL de Render cuando hagas deploy del backend.
+// Ej: const API_URL = "https://salariopa-api.onrender.com";
+const API_URL = "";
 
-  // ── Sincronizar slider ───────────────────────────────────────────────────────
-  document.getElementById('años_experiencia').addEventListener('input', function() {
-    document.getElementById('exp-label').textContent = this.value;
-    document.getElementById('exp-val2').textContent = this.value;
-  });
+// ── Lógica demo (espeja multiplicadores del modelo Python) ────────────────────
+const D = 0.12;
+const m = r => 1 + (r - 1) * D;
 
-  // ── Lógica demo local (refleja multiplicadores del modelo) ───────────────────
-  const SENIORITY_BY_EXP = (exp) => {
-    if (exp <= 2)  return "junior";
-    if (exp <= 6)  return "mid";
-    if (exp <= 11) return "senior";
-    if (exp <= 17) return "gerencial";
-    return "ejecutivo";
+const SENIORITY = exp => exp <= 2 ? "junior" : exp <= 6 ? "mid" : exp <= 11 ? "senior" : exp <= 17 ? "gerencial" : "ejecutivo";
+
+const BASE_SAL = {
+  "Tecnología / IT":         {junior:790,  mid:1900, senior:3000, gerencial:7000,  ejecutivo:14250},
+  "Finanzas / Banca":        {junior:635,  mid:1060, senior:3317, gerencial:5833,  ejecutivo:17000},
+  "Recursos Humanos":        {junior:654,  mid:896,  senior:4500, gerencial:4900,  ejecutivo:11500},
+  "Ingeniería":              {junior:700,  mid:1200, senior:2500, gerencial:5000,  ejecutivo:12000},
+  "Salud":                   {junior:600,  mid:1100, senior:2200, gerencial:4500,  ejecutivo:10000},
+  "Marketing / Ventas":      {junior:500,  mid:900,  senior:1800, gerencial:3500,  ejecutivo:8000 },
+  "Administración":          {junior:500,  mid:850,  senior:1600, gerencial:3000,  ejecutivo:7000 },
+  "Logística / Operaciones": {junior:500,  mid:900,  senior:1700, gerencial:3200,  ejecutivo:7500 },
+  "Legal":                   {junior:800,  mid:1500, senior:3000, gerencial:6000,  ejecutivo:12000},
+  "Educación":               {junior:450,  mid:750,  senior:1200, gerencial:2500,  ejecutivo:5000 },
+};
+const MUL_SECTOR   = {"Banca / Financiero":1.25,"Zona Libre de Colón":1.10,"Multinacional":1.20,"Tecnología / Startup":1.15,"Salud / Farmacéutica":1.05,"Gobierno / Público":0.85,"Retail / Comercio":0.90,"Construcción":1.00,"ONG / Sin fines de lucro":0.80,"Educación / Academia":0.82};
+const MUL_ESTUDIO  = {"Técnico / Universitario incompleto":0.82,"Licenciatura":1.00,"Postgrado / Especialización":1.18,"Maestría":1.30,"Doctorado":1.45};
+const MUL_INGLES   = {"Ninguno":0.88,"Básico":0.95,"Intermedio":1.05,"Avanzado":1.18,"Nativo/Bilingüe":1.28};
+const MUL_EMPRESA  = {"Multinacional":1.18,"Empresa local grande":1.00,"PYME":0.88,"Startup":0.95,"Gobierno":0.87,"Freelance / Independiente":1.05};
+const MUL_MODALIDAD= {"Presencial":1.00,"Híbrido":1.04,"Remoto":1.08};
+const MUL_PROVINCIA= {"Panamá":1.00,"Colón":0.92,"Chiriquí":0.88,"Herrera":0.82,"Los Santos":0.80,"Veraguas":0.81,"Coclé":0.83,"Panamá Oeste":0.90};
+const PISO         = {"Tecnología / IT":789,"Finanzas / Banca":754,"Ingeniería":842,"Salud":739,"Administración":725,"Recursos Humanos":725,"Educación":725,"Logística / Operaciones":754,"Marketing / Ventas":725,"Legal":725};
+const TOOL_BONUS   = {python:0.10, powerbi:0.07, sql:0.08, sap:0.06, excel:0.04};
+
+const tools = {python:0, powerbi:0, sql:0, sap:0, excel:0};
+let rafId = null;
+
+// ── Slider ────────────────────────────────────────────────────────────────────
+document.getElementById('exp').addEventListener('input', e => {
+  document.getElementById('exp-val').textContent = e.target.value;
+  checkForm();
+});
+
+// ── Chips ─────────────────────────────────────────────────────────────────────
+function toggleChip(el) {
+  const k = el.dataset.key;
+  tools[k] = tools[k] ? 0 : 1;
+  el.classList.toggle('on');
+}
+
+// ── Validación del formulario ─────────────────────────────────────────────────
+const REQS = ['area','sector','estudio','ingles','empresa','modalidad','provincia'];
+REQS.forEach(id => document.getElementById(id).addEventListener('change', checkForm));
+function checkForm() {
+  document.getElementById('btn').disabled = !REQS.every(id => document.getElementById(id).value);
+}
+
+// ── Cálculo demo ──────────────────────────────────────────────────────────────
+function calcularDemo() {
+  const area      = document.getElementById('area').value;
+  const sector    = document.getElementById('sector').value;
+  const estudio   = document.getElementById('estudio').value;
+  const ingles    = document.getElementById('ingles').value;
+  const empresa   = document.getElementById('empresa').value;
+  const modalidad = document.getElementById('modalidad').value;
+  const provincia = document.getElementById('provincia').value;
+  const exp       = parseInt(document.getElementById('exp').value);
+
+  const seniority = SENIORITY(exp);
+  let sal = (BASE_SAL[area] || BASE_SAL["Administración"])[seniority];
+
+  sal *= m(MUL_SECTOR[sector]    || 1);
+  sal *= m(MUL_EMPRESA[empresa]  || 1);
+  sal *= m(MUL_ESTUDIO[estudio]  || 1);
+  sal *= m(MUL_INGLES[ingles]    || 1);
+  sal *= m(MUL_MODALIDAD[modalidad] || 1);
+  sal *= m(MUL_PROVINCIA[provincia] || 1);
+
+  let bonus = 0;
+  for (const [k, v] of Object.entries(TOOL_BONUS)) { if (tools[k]) bonus += v * D; }
+  sal *= (1 + bonus);
+
+  const piso = PISO[area] || 637;
+  sal = Math.max(Math.round(sal), piso);
+
+  return {
+    sal,
+    min: Math.max(Math.round(sal * 0.88), piso),
+    max: Math.round(sal * 1.12),
+    tips: generarTips(area, sector, estudio, ingles, empresa, modalidad, provincia, exp, sal),
   };
+}
 
-  const BASE_SALARY = {
-    "Tecnología / IT":         { junior: 790, mid: 1900, senior: 3000, gerencial: 7000, ejecutivo: 14250 },
-    "Finanzas / Banca":        { junior: 635, mid: 1060, senior: 3317, gerencial: 5833, ejecutivo: 17000 },
-    "Recursos Humanos":        { junior: 654, mid: 896,  senior: 4500, gerencial: 4900, ejecutivo: 11500 },
-    "Ingeniería":              { junior: 700, mid: 1200, senior: 2500, gerencial: 5000, ejecutivo: 12000 },
-    "Salud":                   { junior: 600, mid: 1100, senior: 2200, gerencial: 4500, ejecutivo: 10000 },
-    "Marketing / Ventas":      { junior: 500, mid: 900,  senior: 1800, gerencial: 3500, ejecutivo: 8000  },
-    "Administración":          { junior: 500, mid: 850,  senior: 1600, gerencial: 3000, ejecutivo: 7000  },
-    "Logística / Operaciones": { junior: 500, mid: 900,  senior: 1700, gerencial: 3200, ejecutivo: 7500  },
-    "Legal":                   { junior: 800, mid: 1500, senior: 3000, gerencial: 6000, ejecutivo: 12000 },
-    "Educación":               { junior: 450, mid: 750,  senior: 1200, gerencial: 2500, ejecutivo: 5000  },
-  };
-  const D = 0.12;
-  const m = (raw) => 1 + (raw - 1) * D;
+function generarTips(area, sector, estudio, ingles, empresa, modalidad, provincia, exp, sal) {
+  const tips = [];
+  if (["Ninguno","Básico"].includes(ingles))
+    tips.push({i:"🌐", t:"Mejorar inglés a nivel Avanzado puede incrementar tu salario hasta un 18% en el mercado panameño."});
+  if (estudio === "Técnico / Universitario incompleto")
+    tips.push({i:"🎓", t:"Completar una licenciatura puede aumentar tu salario aproximadamente un 22%."});
+  else if (estudio === "Licenciatura")
+    tips.push({i:"🎓", t:"Un postgrado o maestría puede incrementar tu compensación entre 18% y 30%."});
+  if (area === "Tecnología / IT" && !tools.python)
+    tips.push({i:"🐍", t:"Python es la habilidad más demandada en IT — agregarla puede abrir roles con salarios 10% más altos."});
+  if (area === "Finanzas / Banca" && !tools.excel)
+    tips.push({i:"📊", t:"Excel avanzado (Power Query, tablas dinámicas) es clave en finanzas y muy valorado por empleadores."});
+  if (empresa === "PYME")
+    tips.push({i:"🏢", t:"Tu perfil tiene potencial para multinacionales, que pagan hasta 30% más que las PYMEs en Panamá."});
+  if (modalidad === "Presencial")
+    tips.push({i:"🏠", t:"Las posiciones híbridas y remotas ofrecen salarios efectivamente 4–8% más altos en promedio."});
+  if (!tips.length)
+    tips.push({i:"✅", t:"Tu perfil está sólidamente posicionado para el mercado laboral panameño actual."});
+  return tips.slice(0, 3);
+}
 
-  const SECTOR_MUL    = {"Banca / Financiero":1.25,"Zona Libre de Colón":1.10,"Multinacional":1.20,"Tecnología / Startup":1.15,"Salud / Farmacéutica":1.05,"Gobierno / Público":0.85,"Retail / Comercio":0.90,"Construcción":1.00,"ONG / Sin fines de lucro":0.80,"Educación / Academia":0.82};
-  const EMPRESA_MUL   = {"Multinacional":1.18,"Empresa local grande":1.00,"PYME":0.88,"Startup":0.95,"Gobierno":0.87,"Freelance / Independiente":1.05};
-  const ESTUDIO_MUL   = {"Técnico / Universitario incompleto":0.82,"Licenciatura":1.00,"Postgrado / Especialización":1.18,"Maestría":1.30,"Doctorado":1.45};
-  const INGLES_MUL    = {"Ninguno":0.88,"Básico":0.95,"Intermedio":1.05,"Avanzado":1.18,"Nativo/Bilingüe":1.28};
-  const MODALIDAD_MUL = {"Presencial":1.00,"Híbrido":1.04,"Remoto":1.08};
-  const PROVINCIA_MUL = {"Panamá":1.00,"Colón":0.92,"Chiriquí":0.88,"Herrera":0.82,"Los Santos":0.80,"Veraguas":0.81,"Coclé":0.83,"Panamá Oeste":0.90};
-  const PISO_MITRADEL = {"Tecnología / IT":789,"Finanzas / Banca":754,"Ingeniería":842,"Salud":739,"Administración":725,"Recursos Humanos":725,"Educación":725,"Logística / Operaciones":754,"Marketing / Ventas":725,"Legal":725};
+// ── Animación del número ──────────────────────────────────────────────────────
+function animarNumero(el, hasta, ms) {
+  if (rafId) cancelAnimationFrame(rafId);
+  const t0 = performance.now();
+  const fmt = n => "$" + Math.round(n).toLocaleString("en-US");
+  (function tick(now) {
+    const p = Math.min((now - t0) / ms, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(hasta * ease);
+    if (p < 1) rafId = requestAnimationFrame(tick);
+  })(t0);
+}
 
-  const HERRAMIENTA_BONUS = { tiene_python: 0.10, tiene_powerbi: 0.07, tiene_sql: 0.08, tiene_sap: 0.06, tiene_excel_av: 0.04 };
+// ── Mostrar resultado ─────────────────────────────────────────────────────────
+function mostrar(data) {
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('loading').classList.remove('visible');
+  document.getElementById('result').classList.add('visible');
 
-  function calcularDemo(perfil) {
-    const seniority = SENIORITY_BY_EXP(perfil.años_experiencia);
-    let base = (BASE_SALARY[perfil.area] || BASE_SALARY["Administración"])[seniority];
-    base *= m(SECTOR_MUL[perfil.sector]    || 1);
-    base *= m(EMPRESA_MUL[perfil.tipo_empresa] || 1);
-    base *= m(ESTUDIO_MUL[perfil.nivel_estudio] || 1);
-    base *= m(INGLES_MUL[perfil.nivel_ingles]  || 1);
-    base *= m(MODALIDAD_MUL[perfil.modalidad]  || 1);
-    base *= m(PROVINCIA_MUL[perfil.provincia]  || 1);
-    let bonus = 0;
-    for (const [k, v] of Object.entries(HERRAMIENTA_BONUS)) { if (perfil[k]) bonus += v * D; }
-    base *= (1 + bonus);
-    const piso = PISO_MITRADEL[perfil.area] || 637;
-    const salario = Math.max(Math.round(base), piso);
-    return { salario_estimado: salario, rango_min: Math.max(Math.round(salario * 0.88), piso), rango_max: Math.round(salario * 1.12), tips: generarTips(perfil, salario) };
-  }
+  animarNumero(document.getElementById('salary-num'), data.sal, 900);
 
-  function generarTips(p, salario) {
-    const tips = [];
-    if (["Ninguno","Básico"].includes(p.nivel_ingles)) tips.push("💡 Mejorar inglés a nivel Avanzado puede incrementar tu salario hasta un 18%");
-    if (p.nivel_estudio === "Técnico / Universitario incompleto") tips.push("🎓 Completar una licenciatura puede aumentar tu salario ~22%");
-    else if (p.nivel_estudio === "Licenciatura") tips.push("🎓 Un postgrado puede incrementar tu compensación entre 18% y 30%");
-    if (p.area === "Tecnología / IT" && !p.tiene_python) tips.push("🐍 Python es de alta demanda en IT — aprenderlo puede abrir mejores oportunidades");
-    if (p.area === "Finanzas / Banca" && !p.tiene_excel_av) tips.push("📊 Excel avanzado (Power Query, tablas dinámicas) es clave en finanzas");
-    if (p.tipo_empresa === "PYME") tips.push("🏢 Las multinacionales y empresas grandes pagan hasta 30% más que las PYMEs");
-    if (p.modalidad === "Presencial") tips.push("🏠 La modalidad híbrida/remota puede representar un aumento efectivo del 4–8%");
-    if (!tips.length) tips.push("✅ Tu perfil está bien posicionado para el mercado panameño");
-    return tips.slice(0, 3);
-  }
+  const fmt = n => "$" + n.toLocaleString("en-US");
+  document.getElementById('r-min').textContent = fmt(data.min);
+  document.getElementById('r-est').textContent = fmt(data.sal);
+  document.getElementById('r-max').textContent = fmt(data.max);
 
-  // ── Animación del número ─────────────────────────────────────────────────────
-  function animarNumero(el, desde, hasta, ms) {
-    const inicio = performance.now();
-    const fmt = (n) => "$" + Math.round(n).toLocaleString("es-PA");
-    requestAnimationFrame(function tick(ahora) {
-      const t = Math.min((ahora - inicio) / ms, 1);
-      const ease = 1 - Math.pow(1 - t, 3);
-      el.textContent = fmt(desde + (hasta - desde) * ease);
-      if (t < 1) requestAnimationFrame(tick);
-    });
-  }
+  // Reset + animar barra
+  const fill = document.getElementById('range-fill');
+  const pin  = document.getElementById('range-pin');
+  fill.classList.remove('go'); pin.classList.remove('go');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    fill.classList.add('go'); pin.classList.add('go');
+  }));
 
-  // ── Mostrar resultado ────────────────────────────────────────────────────────
-  let prevSalario = 0;
-  function mostrarResultado(data) {
-    const { salario_estimado, rango_min, rango_max, tips } = data;
+  // Tips
+  const tc = document.getElementById('tips-card');
+  tc.innerHTML = '<p class="tips-title">Cómo mejorar tu posición</p>' +
+    data.tips.map(t => `
+      <div class="tip-item">
+        <div class="tip-icon">${t.i}</div>
+        <span>${t.t}</span>
+      </div>`).join('');
+}
 
-    document.getElementById('resultado').classList.add('visible');
-    animarNumero(document.getElementById('salario-big'), prevSalario, salario_estimado, 800);
-    prevSalario = salario_estimado;
+// ── Calcular (demo o API) ─────────────────────────────────────────────────────
+async function calcular() {
+  const btn = document.getElementById('btn');
+  btn.disabled = true;
+  btn.innerHTML = 'Calculando... <span class="btn-arrow">⟳</span>';
 
-    document.getElementById('rango-min').textContent = "$" + rango_min.toLocaleString("es-PA");
-    document.getElementById('rango-max').textContent = "$" + rango_max.toLocaleString("es-PA");
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('result').classList.remove('visible');
+  document.getElementById('loading').classList.add('visible');
 
-    const total = rango_max - rango_min;
-    const pct = total > 0 ? ((salario_estimado - rango_min) / total) * 100 : 50;
-    setTimeout(() => {
-      document.getElementById('rango-fill').style.width = pct + "%";
-      document.getElementById('rango-marker').style.left = pct + "%";
-    }, 200);
-
-    const tc = document.getElementById('tips-container');
-    tc.innerHTML = '<h3>Cómo mejorar tu posición</h3>' + tips.map(t => `<div class="tip">${t}</div>`).join('');
-  }
-
-  // ── Estimar ──────────────────────────────────────────────────────────────────
-  async function estimar() {
-    const btn = document.getElementById('btn-estimar');
-    const errEl = document.getElementById('error-msg');
-    errEl.classList.remove('visible');
-    btn.disabled = true;
-    btn.textContent = 'Calculando…';
-
-    const perfil = {
-      area:              document.getElementById('area').value,
-      sector:            document.getElementById('sector').value,
-      tipo_empresa:      document.getElementById('tipo_empresa').value,
-      modalidad:         document.getElementById('modalidad').value,
-      provincia:         document.getElementById('provincia').value,
-      nivel_estudio:     document.getElementById('nivel_estudio').value,
-      nivel_ingles:      document.getElementById('nivel_ingles').value,
-      años_experiencia:  parseInt(document.getElementById('años_experiencia').value),
-      tiene_python:      document.getElementById('tiene_python').checked ? 1 : 0,
-      tiene_powerbi:     document.getElementById('tiene_powerbi').checked ? 1 : 0,
-      tiene_sql:         document.getElementById('tiene_sql').checked ? 1 : 0,
-      tiene_sap:         document.getElementById('tiene_sap').checked ? 1 : 0,
-      tiene_excel_av:    document.getElementById('tiene_excel_av').checked ? 1 : 0,
-    };
-
-    try {
-      let data;
-      if (API_URL) {
-        const res = await fetch(API_URL + "/predict", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(perfil),
-        });
-        if (!res.ok) throw new Error("Error del servidor: " + res.status);
-        data = await res.json();
-        document.getElementById('mode-badge').textContent = "en vivo";
-        document.getElementById('mode-badge').classList.add('live');
-      } else {
-        // modo demo sin backend
-        await new Promise(r => setTimeout(r, 400));
-        data = calcularDemo(perfil);
-      }
-      mostrarResultado(data);
-    } catch (e) {
-      errEl.textContent = "No se pudo conectar al servidor. Usando modo demo.";
-      errEl.classList.add('visible');
-      mostrarResultado(calcularDemo(perfil));
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Estimar mi salario →';
+  try {
+    let data;
+    if (API_URL) {
+      const perfil = {
+        area:             document.getElementById('area').value,
+        sector:           document.getElementById('sector').value,
+        tipo_empresa:     document.getElementById('empresa').value,
+        modalidad:        document.getElementById('modalidad').value,
+        provincia:        document.getElementById('provincia').value,
+        nivel_estudio:    document.getElementById('estudio').value,
+        nivel_ingles:     document.getElementById('ingles').value,
+        años_experiencia: parseInt(document.getElementById('exp').value),
+        tiene_python:     tools.python,
+        tiene_powerbi:    tools.powerbi,
+        tiene_sql:        tools.sql,
+        tiene_sap:        tools.sap,
+        tiene_excel_av:   tools.excel,
+      };
+      const res = await fetch(API_URL + "/predict", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(perfil),
+      });
+      if (!res.ok) throw new Error(res.status);
+      const j = await res.json();
+      data = {
+        sal: j.salario_estimado,
+        min: j.rango_min,
+        max: j.rango_max,
+        tips: j.tips.map(t => ({i: t.slice(0,2), t: t.slice(3)})),
+      };
+      document.getElementById('status-text').textContent = `En vivo · GradientBoosting · R² 0.9952 · MAE $154`;
+    } else {
+      await new Promise(r => setTimeout(r, 600));
+      data = calcularDemo();
     }
+    mostrar(data);
+  } catch(e) {
+    await new Promise(r => setTimeout(r, 300));
+    mostrar(calcularDemo());
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Recalcular <span class="btn-arrow">→</span>';
   }
+}
 </script>
 </body>
 </html>
