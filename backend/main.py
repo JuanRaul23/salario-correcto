@@ -22,7 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-BASE = Path(__file__).parent.parent / "model"
+BASE = Path(__file__).parent
 MODEL_PATH = BASE / "modelo_salario_pa.pkl"
 META_PATH = BASE / "modelo_metadata.json"
 
