@@ -1,0 +1,55 @@
+cargo,area,seniority,sal_min,sal_max,sal_promedio,fuente,es_imputado
+Cajero bancario,Finanzas / Banca,junior,300,850,600,Computrabajo,0
+Asistente contable,Finanzas / Banca,junior,300,1200,736,Computrabajo,0
+Auxiliar contable,Finanzas / Banca,junior,300,1100,729,Computrabajo,0
+Asesor de crédito,Finanzas / Banca,junior,500,750,600,Computrabajo,0
+Oficial de crédito,Finanzas / Banca,junior,584,652,649,Computrabajo,0
+Analista contable,Finanzas / Banca,mid,400,1300,942,Computrabajo,0
+Analista financiero,Finanzas / Banca,mid,700,2000,900,Computrabajo,0
+Contador general,Finanzas / Banca,mid,600,2500,1123,Computrabajo,0
+Contador CPA / bilingüe,Finanzas / Banca,mid,1300,1800,1511,Computrabajo,0
+Auditor interno,Finanzas / Banca,mid,800,2000,1150,Computrabajo,0
+Oficial de cumplimiento,Finanzas / Banca,mid,1000,2500,1500,Computrabajo,1
+Analista de riesgos,Finanzas / Banca,mid,900,2000,1400,Computrabajo,1
+Controller financiero,Finanzas / Banca,senior,3000,6000,4500,Michael Page,1
+Tesorero,Finanzas / Banca,senior,2500,5000,3750,Michael Page,1
+Analista de inversiones,Finanzas / Banca,senior,3400,5000,4200,Michael Page,0
+Gerente de finanzas,Finanzas / Banca,gerencial,6000,8000,7000,Michael Page,0
+Gerente de riesgo crediticio,Finanzas / Banca,gerencial,4000,7500,5750,Michael Page,0
+Gerente de operaciones bancarias,Finanzas / Banca,gerencial,4000,7500,5750,Michael Page,0
+CFO / Director financiero,Finanzas / Banca,ejecutivo,12000,35000,18000,Michael Page,0
+VP de finanzas,Finanzas / Banca,ejecutivo,12000,20000,16000,Michael Page,0
+Soporte técnico,Tecnología / IT,junior,400,2000,785,Computrabajo,0
+Analista de soporte técnico,Tecnología / IT,junior,598,1000,799,Computrabajo,0
+Programador,Tecnología / IT,junior,500,1200,766,Computrabajo,0
+Developer,Tecnología / IT,mid,750,1500,1164,Computrabajo,0
+Desarrollador web,Tecnología / IT,mid,2000,3200,2600,Michael Page,0
+Desarrollador frontend,Tecnología / IT,mid,2000,5000,3200,Michael Page,0
+Desarrollador backend,Tecnología / IT,mid,2000,5000,3200,Michael Page,0
+Desarrollador full-stack,Tecnología / IT,mid,2000,5000,3500,Michael Page,0
+Analista de datos,Tecnología / IT,mid,650,2500,1415,Computrabajo,0
+Business analyst,Tecnología / IT,mid,850,2800,1388,Computrabajo,0
+Project manager IT,Tecnología / IT,mid,950,3250,1692,Computrabajo,0
+Desarrollador senior,Tecnología / IT,senior,2000,3700,2811,Computrabajo,0
+Data scientist,Tecnología / IT,senior,2000,4500,3000,Computrabajo,1
+Data engineer,Tecnología / IT,senior,2200,4800,3200,Michael Page,1
+BI developer / Power BI analyst,Tecnología / IT,mid,1200,2800,1800,Computrabajo,1
+DBA,Tecnología / IT,senior,1800,3500,2500,Michael Page,1
+DevOps engineer,Tecnología / IT,senior,2000,4500,3000,Michael Page,1
+QA engineer,Tecnología / IT,mid,900,2200,1400,Computrabajo,1
+Arquitecto de software,Tecnología / IT,senior,3500,6000,4500,Michael Page,1
+Gerente de tecnología,Tecnología / IT,gerencial,6000,8000,7000,Michael Page,0
+Director de tecnología,Tecnología / IT,ejecutivo,10000,15000,12500,Michael Page,0
+CIO / VP de tecnología,Tecnología / IT,ejecutivo,12000,20000,16000,Michael Page,0
+Recepcionista,Recursos Humanos,junior,300,1200,652,Computrabajo,0
+Oficinista,Recursos Humanos,junior,300,700,620,Computrabajo,0
+Asistente administrativo,Recursos Humanos,junior,330,1000,691,Computrabajo,0
+Asistente de gerencia,Recursos Humanos,mid,500,1500,846,Computrabajo,0
+Secretaria de gerencia,Recursos Humanos,mid,600,950,887,Computrabajo,0
+Analista de RRHH,Recursos Humanos,mid,700,1500,900,Computrabajo,1
+Analista de nómina,Recursos Humanos,mid,650,1200,900,Computrabajo,1
+Reclutador / Talent Acquisition,Recursos Humanos,mid,800,1500,1050,Computrabajo,1
+Generalista de RRHH,Recursos Humanos,senior,3500,5500,4500,Michael Page,0
+Gerente de RRHH,Recursos Humanos,gerencial,5500,9000,7000,Michael Page,1
+Director de RRHH,Recursos Humanos,ejecutivo,9000,14000,11500,Michael Page,0
+Gerente administrativo,Recursos Humanos,gerencial,2000,4000,2800,Computrabajo,1
