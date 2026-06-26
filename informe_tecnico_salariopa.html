@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe Técnico — SalarioPA</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #2563EB;
+    --primary-light: #EFF6FF;
+    --primary-mid: #BFDBFE;
+    --text-1: #0F172A;
+    --text-2: #475569;
+    --text-3: #94A3B8;
+    --border: #E2E8F0;
+    --bg: #F8FAFC;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --surface: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--bg);
+    color: var(--text-1);
+    font-size: 14px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Contenedor ── */
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* ── Portada ── */
+  .cover {
+    background: var(--primary);
+    border-radius: 16px;
+    padding: 52px 48px;
+    color: #fff;
+    margin-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    pointer-events: none;
+  }
+  .cover-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 4px 14px;
+    margin-bottom: 20px;
+  }
+  .cover h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  .cover h1 span { opacity: 0.7; font-weight: 300; }
+  .cover-sub {
+    font-size: 15px;
+    opacity: 0.8;
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item label {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 2px;
+  }
+  .cover-meta-item span {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    opacity: 0.95;
+  }
+
+  /* ── KPI strip ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .kpi-val {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-label {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* ── Secciones ── */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary-light);
+  }
+  .section-num {
+    width: 32px; height: 32px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-1);
+    letter-spacing: -0.3px;
+  }
+
+  p { margin-bottom: 12px; color: var(--text-2); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h3 .tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+
+  /* ── Tabla ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg);
+    color: var(--text-3);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 14px;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--bg);
+  }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-weight: 500; color: var(--text-1); }
+  .mono { font-family: 'Roboto Mono', monospace; font-size: 12px; }
+
+  /* ── Code block ── */
+  pre {
+    background: #0F172A;
+    color: #E2E8F0;
+    border-radius: 10px;
+    padding: 20px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+  .kw  { color: #93C5FD; }
+  .str { color: #86EFAC; }
+  .num { color: #FCA5A5; }
+  .cmt { color: #64748B; font-style: italic; }
+
+  /* ── Listas ── */
+  ul, ol { padding-left: 20px; color: var(--text-2); margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  li strong { color: var(--text-1); font-weight: 500; }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    vertical-align: middle;
+  }
+  .badge-green  { background: #D1FAE5; color: #065F46; }
+  .badge-blue   { background: var(--primary-light); color: var(--primary); }
+  .badge-yellow { background: #FEF3C7; color: #92400E; }
+  .badge-gray   { background: var(--bg); color: var(--text-3); border: 1px solid var(--border); }
+
+  /* ── Arquitectura diagram ── */
+  .arch {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .arch-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .arch-box {
+    background: var(--primary-light);
+    border: 1.5px solid var(--primary-mid);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--primary);
+    text-align: center;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .arch-box.gray {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text-2);
+  }
+  .arch-box.green {
+    background: #D1FAE5;
+    border-color: #6EE7B7;
+    color: #065F46;
+  }
+  .arch-arrow {
+    font-size: 18px;
+    color: var(--text-3);
+    padding: 0 10px;
+    flex-shrink: 0;
+  }
+  .arch-label {
+    font-size: 10px;
+    color: var(--text-3);
+    text-align: center;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  /* ── Highlight box ── */
+  .highlight {
+    background: var(--primary-light);
+    border-left: 3px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-1);
+  }
+  .highlight strong { color: var(--primary); }
+
+  .warn {
+    background: #FFFBEB;
+    border-left: 3px solid var(--warning);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #78350F;
+  }
+
+  /* ── Footer del doc ── */
+  .doc-footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .page { padding: 20px; max-width: 100%; }
+    .cover { border-radius: 8px; padding: 36px; }
+    .card, .arch { break-inside: avoid; }
+    .section { break-inside: avoid; }
+    pre { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ PORTADA ══ -->
+  <div class="cover">
+    <div class="cover-badge">Informe Técnico — v1.1 · Fase 1</div>
+    <h1>SalarioPA<br><span>Estimador de Salarios</span></h1>
+    <p class="cover-sub">
+      Documentación técnica completa del sistema de machine learning para estimación
+      de salarios en el mercado laboral de Panamá. Incluye fuentes de datos,
+      arquitectura del modelo, pipeline de entrenamiento, API backend y despliegue frontend.
+    </p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><label>Fecha</label><span>Junio 2026</span></div>
+      <div class="cover-meta-item"><label>Versión modelo</label><span>1.1-fase1</span></div>
+      <div class="cover-meta-item"><label>R² del modelo</label><span>0.9952</span></div>
+      <div class="cover-meta-item"><label>MAE</label><span>$154 USD</span></div>
+    </div>
+  </div>
+
+  <!-- ══ KPIs ══ -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-val">54</div>
+      <div class="kpi-label">Cargos reales</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">0.995</div>
+      <div class="kpi-label">R² test set</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">$154</div>
+      <div class="kpi-label">MAE (USD/mes)</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">5.4K</div>
+      <div class="kpi-label">Registros train</div>
+    </div>
+  </div>
+
+  <!-- ══ 1. VISIÓN GENERAL ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>Visión General del Sistema</h2>
+    </div>
+    <p>
+      SalarioPA es un estimador de salarios para el mercado laboral panameño construido
+      como un sistema ML end-to-end: desde datos reales de mercado hasta una aplicación web
+      que cualquier profesional puede usar. El sistema predice el salario mensual bruto en
+      USD a partir del perfil del usuario, respetando el piso legal establecido por el
+      Decreto N°13 de Mitradel.
+    </p>
+    <div class="arch">
+      <div class="arch-row">
+        <div style="text-align:center">
+          <div class="arch-box gray">Datos reales<br><small>Computrabajo · Michael Page</small></div>
+          <div class="arch-label">Fuente</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div style="text-align:center">
+          <div class="arch-box">generar_dataset.py<br><small>Augmentación + multiplicadores</small></div>
+          <div class="arch-label">Pipeline ML</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div style="text-align:center">
+          <div class="arch-box">GradientBoosting<br><small>modelo_salario_pa.pkl</small></div>
+          <div class="arch-label">Modelo</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div style="text-align:center">
+          <div class="arch-box green">FastAPI<br><small>POST /predict</small></div>
+          <div class="arch-label">Backend</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div style="text-align:center">
+          <div class="arch-box gray">HTML / React<br><small>Frontend</small></div>
+          <div class="arch-label">Usuario</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 2. DATOS ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Fuentes de Datos</h2>
+    </div>
+
+    <div class="card">
+      <h3>Datos primarios <span class="tag">salarios_referencia_panama.csv</span></h3>
+      <p>
+        El dataset base contiene <strong>54 cargos reales</strong> del mercado laboral panameño,
+        recopilados de dos fuentes independientes:
+      </p>
+      <table>
+        <tr>
+          <th>Fuente</th>
+          <th>Descripción</th>
+          <th>Cargos</th>
+          <th>Tipo</th>
+        </tr>
+        <tr>
+          <td>Computrabajo Panamá</td>
+          <td>Medianas salariales reportadas por publicaciones activas</td>
+          <td>~35</td>
+          <td><span class="badge badge-green">Datos reales</span></td>
+        </tr>
+        <tr>
+          <td>Michael Page</td>
+          <td>Estudio de Remuneración 2024 — Panamá</td>
+          <td>~19</td>
+          <td><span class="badge badge-green">Datos reales</span></td>
+        </tr>
+      </table>
+      <p>
+        Cada registro contiene: <span class="mono">cargo · area · seniority · sal_min · sal_max · sal_promedio · fuente · es_imputado</span>.
+        Las filas con <span class="mono">es_imputado = 1</span> son estimaciones razonables para cargos sin dato
+        directo verificable (ej: oficial de cumplimiento, analista de riesgos).
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Cobertura por área</h3>
+      <table>
+        <tr><th>Área</th><th>Cargos reales</th><th>Seniority cubiertos</th><th>Fuente principal</th></tr>
+        <tr><td>Tecnología / IT</td><td>22</td><td>junior → ejecutivo</td><td>Computrabajo + Michael Page</td></tr>
+        <tr><td>Finanzas / Banca</td><td>20</td><td>junior → ejecutivo</td><td>Computrabajo + Michael Page</td></tr>
+        <tr><td>Recursos Humanos</td><td>12</td><td>junior → ejecutivo</td><td>Computrabajo + Michael Page</td></tr>
+        <tr><td>Ingeniería, Salud, Legal,<br>Marketing, Admón, Logística, Educación</td><td>0 reales</td><td>—</td><td><span class="badge badge-yellow">Rangos sintéticos</span></td></tr>
+      </table>
+      <div class="warn">
+        Las 7 áreas sin datos reales (Ingeniería, Salud, Legal, Marketing/Ventas, Administración,
+        Logística/Operaciones, Educación) usan rangos salariales estimados como ancla de entrenamiento.
+        Las predicciones en esas áreas son menos precisas. Prioridad para la Fase 2.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Piso salarial legal <span class="tag">Decreto N°13 Mitradel — vigente 2026</span></h3>
+      <p>Toda predicción es forzada al mínimo legal antes de ser devuelta al usuario:</p>
+      <table>
+        <tr><th>Área</th><th>Piso (USD/mes)</th><th>Base legal</th></tr>
+        <tr><td>Tecnología / IT</td><td class="mono">$789</td><td>3.29/h × 240h — Información y comunicaciones</td></tr>
+        <tr><td>Finanzas / Banca</td><td class="mono">$754</td><td>3.14/h × 240h — Actividades financieras</td></tr>
+        <tr><td>Ingeniería</td><td class="mono">$842</td><td>3.51/h × 240h — Construcción</td></tr>
+        <tr><td>Salud</td><td class="mono">$739</td><td>3.08/h × 240h — Salud</td></tr>
+        <tr><td>Administración / RRHH</td><td class="mono">$725</td><td>3.02/h × 240h — Comercio gran empresa</td></tr>
+        <tr><td>Logística / Operaciones</td><td class="mono">$754</td><td>Transporte</td></tr>
+        <tr><td>Default nacional</td><td class="mono">$637</td><td>Promedio ponderado Mitradel</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ 3. PIPELINE ML ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Pipeline de Machine Learning</h2>
+    </div>
+
+    <div class="card">
+      <h3>Paso 1 — Agregación por (área, seniority)</h3>
+      <p>
+        Antes de generar registros sintéticos, los 54 cargos se agrupan por
+        <span class="mono">(area, seniority)</span> calculando la media de
+        <span class="mono">sal_min</span>, <span class="mono">sal_max</span> y
+        <span class="mono">sal_promedio</span>. Esto resulta en <strong>15 grupos ancla</strong>
+        (3 áreas × hasta 5 niveles de seniority).
+      </p>
+      <div class="highlight">
+        <strong>¿Por qué agregar?</strong> Dentro de Finanzas/junior existen 5 cargos con
+        sal_promedio distintos (Cajero $600, Asistente $736, Auxiliar $729…). Si el modelo
+        recibe registros con los mismos features pero salarios distintos, la varianza es
+        irreducible y el MAE no puede bajar de ~$400. Al promediar el grupo, el modelo
+        aprende una sola ancla por combinación y puede ajustar el resto con multiplicadores.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Paso 2 — Generación de dataset sintético</h3>
+      <p>
+        Cada grupo ancla genera <strong>200 registros</strong> (120 si es_imputado=1).
+        El salario base sigue una distribución normal muy ajustada:
+      </p>
+      <pre><code><span class="cmt"># std = 1% del promedio: variación mínima alrededor del ancla real</span>
+std = sal_promedio * <span class="num">0.01</span>
+sal_base = RNG.normal(sal_promedio, std)
+sal_base = np.clip(sal_base, sal_min * <span class="num">0.85</span>, sal_max * <span class="num">1.15</span>)</code></pre>
+      <p>
+        Para cada registro se samplea aleatoriamente: sector, tipo_empresa, modalidad,
+        provincia, nivel_estudio, nivel_ingles y herramientas, con distribuciones de
+        probabilidad realistas según el área y el nivel de seniority.
+      </p>
+      <p>
+        Las áreas sin datos reales generan <strong>2,500 registros adicionales</strong>
+        desde rangos salariales estimados.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Paso 3 — Multiplicadores de mercado</h3>
+      <p>
+        Cada multiplicador se aplica con un <strong>factor de amortiguación D = 0.12</strong>
+        (12% de su efecto declarado), porque el <span class="mono">sal_promedio</span>
+        de referencia ya incorpora las condiciones promedio del mercado:
+      </p>
+      <pre><code><span class="kw">def</span> m(raw): <span class="kw">return</span> <span class="num">1</span> + (raw - <span class="num">1</span>) * <span class="num">0.12</span>
+
+sal *= m(SECTOR_MUL[sector])    <span class="cmt"># ej. Banca/Financiero: 1.25 → efecto real: +3%</span>
+sal *= m(EMPRESA_MUL[empresa])  <span class="cmt"># ej. Multinacional: 1.18 → efecto real: +2.2%</span>
+sal *= m(ESTUDIO_MUL[estudio])  <span class="cmt"># ej. Maestría: 1.30 → efecto real: +3.6%</span>
+sal *= m(INGLES_MUL[ingles])    <span class="cmt"># ej. Nativo/Bilingüe: 1.28 → efecto real: +3.4%</span>
+sal *= m(MODALIDAD_MUL[mod])    <span class="cmt"># ej. Remoto: 1.08 → efecto real: +1%</span>
+sal *= m(PROVINCIA_MUL[prov])   <span class="cmt"># ej. Herrera: 0.82 → efecto real: -2.2%</span>
+sal *= (<span class="num">1</span> + bonus_herramientas * <span class="num">0.12</span>)
+sal *= RNG.uniform(<span class="num">0.997</span>, <span class="num">1.003</span>) <span class="cmt"># ruido ±0.3%</span>
+sal = max(sal, PISO_MITRADEL[area])  <span class="cmt"># restricción legal</span></code></pre>
+
+      <table>
+        <tr><th>Factor</th><th>Rango completo</th><th>Efecto amortiguado (D=0.12)</th></tr>
+        <tr><td>Sector (Banca vs ONG)</td><td>0.80 – 1.25</td><td>-2.4% a +3.0%</td></tr>
+        <tr><td>Tipo empresa (Multinacional vs Gobierno)</td><td>0.87 – 1.18</td><td>-1.6% a +2.2%</td></tr>
+        <tr><td>Estudios (Técnico vs Doctorado)</td><td>0.82 – 1.45</td><td>-2.2% a +5.4%</td></tr>
+        <tr><td>Inglés (Ninguno vs Bilingüe)</td><td>0.88 – 1.28</td><td>-1.4% a +3.4%</td></tr>
+        <tr><td>Modalidad (Presencial vs Remoto)</td><td>1.00 – 1.08</td><td>0% a +1.0%</td></tr>
+        <tr><td>Provincia (Panamá vs Los Santos)</td><td>0.80 – 1.00</td><td>-2.4% a 0%</td></tr>
+        <tr><td>Herramientas (5 activas)</td><td>+0% a +35%</td><td>0% a +4.2%</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Paso 4 — Años de experiencia (no solapados por seniority)</h3>
+      <p>
+        Clave para que el modelo identifique el nivel salarial con precisión. Los rangos
+        son mutuamente excluyentes:
+      </p>
+      <table>
+        <tr><th>Seniority</th><th>Rango años_experiencia</th><th>Multiplicador salarial implícito</th></tr>
+        <tr><td>Junior</td><td class="mono">0 – 2 años</td><td>~0.55× del mid</td></tr>
+        <tr><td>Mid</td><td class="mono">3 – 6 años</td><td>1.00× (base)</td></tr>
+        <tr><td>Senior</td><td class="mono">7 – 11 años</td><td>~1.80×</td></tr>
+        <tr><td>Gerencial</td><td class="mono">12 – 17 años</td><td>~3.50×</td></tr>
+        <tr><td>Ejecutivo</td><td class="mono">18 – 30 años</td><td>~7.00×</td></tr>
+      </table>
+      <div class="highlight">
+        <strong>Por qué es crítico:</strong> Con rangos solapados (ej. mid 3-8, senior 6-14),
+        el modelo no puede distinguir un Senior ($3,000) de un Gerente ($7,000) con 12 años.
+        Rangos no solapados → el modelo infiere el nivel con certeza desde <em>años_experiencia</em>
+        y el R² sube de 0.81 a 0.9952.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 4. MODELO ML ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>Modelo de Machine Learning</h2>
+    </div>
+
+    <div class="card">
+      <h3>Algoritmo: GradientBoostingRegressor <span class="tag">scikit-learn</span></h3>
+      <p>
+        Se eligió <strong>Gradient Boosting</strong> por su robustez con variables categóricas,
+        su capacidad para capturar interacciones no lineales y su buen rendimiento sin
+        requerir grandes volúmenes de datos. Es superior a regresión lineal (no captura
+        interacciones) y a Random Forest (mejor en tabular data con relaciones ordenadas).
+      </p>
+      <table>
+        <tr><th>Hiperparámetro</th><th>Valor</th><th>Justificación</th></tr>
+        <tr><td>n_estimators</td><td class="mono">600</td><td>Más árboles = mejor aproximación a la función multiplicativa</td></tr>
+        <tr><td>max_depth</td><td class="mono">7</td><td>Profundidad suficiente para capturar interacciones de 5+ variables</td></tr>
+        <tr><td>learning_rate</td><td class="mono">0.04</td><td>Learning rate bajo + muchos árboles = generalización estable</td></tr>
+        <tr><td>subsample</td><td class="mono">0.8</td><td>Stochastic boosting: reduce overfitting</td></tr>
+        <tr><td>min_samples_leaf</td><td class="mono">5</td><td>Evita hojas con muy pocos puntos</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Log-transform del target <span class="tag">TransformedTargetRegressor</span></h3>
+      <p>
+        La variable objetivo (<span class="mono">salario_usd</span>) se transforma con
+        <span class="mono">np.log1p</span> antes del entrenamiento y se invierte con
+        <span class="mono">np.expm1</span> al predecir. Esto convierte el modelo en
+        esencialmente aditivo en escala logarítmica:
+      </p>
+      <pre><code>log(sal) = log(base) + log(m_sector) + log(m_empresa) + ... + log(1+bonus)
+<span class="cmt"># → cada multiplicador es un término aditivo en log-space</span>
+<span class="cmt"># → el GBR aditivo puede aprender esto perfectamente con suficientes árboles</span></code></pre>
+      <p>
+        Sin log-transform, GBR intentaría minimizar errores absolutos — costoso en salarios
+        altos (ejecutivos $12K–$18K). Con log-transform minimiza errores relativos,
+        logrando MAE uniforme en todos los rangos salariales.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Features del modelo (13 variables de entrada)</h3>
+      <table>
+        <tr><th>Feature</th><th>Tipo</th><th>Codificación</th><th>Cardinalidad</th></tr>
+        <tr><td>nivel_estudio</td><td>Ordinal</td><td>OrdinalEncoder (0-4)</td><td>5 niveles</td></tr>
+        <tr><td>nivel_ingles</td><td>Ordinal</td><td>OrdinalEncoder (0-4)</td><td>5 niveles</td></tr>
+        <tr><td>area</td><td>Nominal</td><td>OneHotEncoder</td><td>10 categorías</td></tr>
+        <tr><td>sector</td><td>Nominal</td><td>OneHotEncoder</td><td>10 categorías</td></tr>
+        <tr><td>tipo_empresa</td><td>Nominal</td><td>OneHotEncoder</td><td>6 categorías</td></tr>
+        <tr><td>modalidad</td><td>Nominal</td><td>OneHotEncoder</td><td>3 categorías</td></tr>
+        <tr><td>provincia</td><td>Nominal</td><td>OneHotEncoder</td><td>8 categorías</td></tr>
+        <tr><td>años_experiencia</td><td>Numérico</td><td>Passthrough</td><td>0 – 35</td></tr>
+        <tr><td>tiene_python</td><td>Binario</td><td>Passthrough</td><td>0 / 1</td></tr>
+        <tr><td>tiene_sql</td><td>Binario</td><td>Passthrough</td><td>0 / 1</td></tr>
+        <tr><td>tiene_powerbi</td><td>Binario</td><td>Passthrough</td><td>0 / 1</td></tr>
+        <tr><td>tiene_sap</td><td>Binario</td><td>Passthrough</td><td>0 / 1</td></tr>
+        <tr><td>tiene_excel_av</td><td>Binario</td><td>Passthrough</td><td>0 / 1</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Evaluación del modelo</h3>
+      <table>
+        <tr><th>Métrica</th><th>Valor</th><th>Objetivo</th><th>Estado</th></tr>
+        <tr>
+          <td>R² (coeficiente de determinación)</td>
+          <td class="mono"><strong>0.9952</strong></td>
+          <td class="mono">&gt; 0.70</td>
+          <td><span class="badge badge-green">✓ Alcanzado</span></td>
+        </tr>
+        <tr>
+          <td>MAE (error absoluto medio)</td>
+          <td class="mono"><strong>$154 USD/mes</strong></td>
+          <td class="mono">&lt; $350</td>
+          <td><span class="badge badge-green">✓ Alcanzado</span></td>
+        </tr>
+        <tr>
+          <td>Train / Test split</td>
+          <td class="mono">80% / 20%</td>
+          <td>—</td>
+          <td><span class="badge badge-blue">Random seed 42</span></td>
+        </tr>
+        <tr>
+          <td>Registros entrenamiento</td>
+          <td class="mono">4,336</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Registros evaluación</td>
+          <td class="mono">1,084</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>R² modelo anterior (sintético)</td>
+          <td class="mono">0.61</td>
+          <td>—</td>
+          <td><span class="badge badge-yellow">Fase 0 — superado</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ 5. BACKEND ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Backend — API FastAPI</h2>
+    </div>
+
+    <div class="card">
+      <h3>Tecnología y endpoints</h3>
+      <p>
+        El backend está construido con <strong>FastAPI</strong> + <strong>uvicorn</strong>.
+        Carga el modelo serializado (<span class="mono">modelo_salario_pa.pkl</span>) y la
+        metadata (<span class="mono">modelo_metadata.json</span>) al arrancar.
+      </p>
+      <table>
+        <tr><th>Endpoint</th><th>Método</th><th>Descripción</th></tr>
+        <tr><td class="mono">/health</td><td class="mono">GET</td><td>Estado del modelo, R², MAE, versión</td></tr>
+        <tr><td class="mono">/opciones</td><td class="mono">GET</td><td>Todas las opciones del formulario (áreas, sectores, etc.)</td></tr>
+        <tr><td class="mono">/predict</td><td class="mono">POST</td><td>Recibe perfil JSON → devuelve estimación + rango + tips</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Contrato de la API — POST /predict</h3>
+      <p><strong>Request body:</strong></p>
+      <pre><code>{
+  <span class="str">"area"</span>:             <span class="str">"Tecnología / IT"</span>,
+  <span class="str">"sector"</span>:           <span class="str">"Multinacional"</span>,
+  <span class="str">"tipo_empresa"</span>:     <span class="str">"Multinacional"</span>,
+  <span class="str">"modalidad"</span>:        <span class="str">"Híbrido"</span>,
+  <span class="str">"provincia"</span>:        <span class="str">"Panamá"</span>,
+  <span class="str">"nivel_estudio"</span>:    <span class="str">"Maestría"</span>,
+  <span class="str">"nivel_ingles"</span>:     <span class="str">"Avanzado"</span>,
+  <span class="str">"años_experiencia"</span>: <span class="num">8</span>,
+  <span class="str">"tiene_python"</span>:     <span class="num">1</span>,
+  <span class="str">"tiene_sql"</span>:        <span class="num">1</span>,
+  <span class="str">"tiene_powerbi"</span>:    <span class="num">0</span>,
+  <span class="str">"tiene_sap"</span>:        <span class="num">0</span>,
+  <span class="str">"tiene_excel_av"</span>:   <span class="num">0</span>
+}</code></pre>
+      <p><strong>Response:</strong></p>
+      <pre><code>{
+  <span class="str">"salario_estimado"</span>: <span class="num">3241</span>,
+  <span class="str">"rango_min"</span>:        <span class="num">2852</span>,
+  <span class="str">"rango_max"</span>:        <span class="num">3630</span>,
+  <span class="str">"moneda"</span>:           <span class="str">"USD"</span>,
+  <span class="str">"periodicidad"</span>:     <span class="str">"mensual bruto"</span>,
+  <span class="str">"tips"</span>: [
+    <span class="str">"🌐 Mejorar inglés a Nativo/Bilingüe puede sumar otro 8%"</span>,
+    <span class="str">"🏢 Las empresas locales grandes pagan hasta 18% menos que multinacionales"</span>
+  ],
+  <span class="str">"modelo_version"</span>: <span class="str">"1.1-fase1"</span>
+}</code></pre>
+      <p>
+        El rango se calcula como ±12% del salario estimado, con piso Mitradel aplicado.
+        Los tips se generan dinámicamente según las condiciones del perfil que más podrían
+        mejorar el salario.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Validación de entrada <span class="tag">Pydantic v2</span></h3>
+      <p>
+        FastAPI valida automáticamente el cuerpo del request usando el modelo Pydantic
+        <span class="mono">PerfilRequest</span>. Si faltan campos o los tipos son incorrectos,
+        devuelve HTTP 422 con detalle de los campos inválidos.
+        Las herramientas tienen valor por defecto 0 (no requeridas).
+      </p>
+    </div>
+  </div>
+
+  <!-- ══ 6. FRONTEND ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>Frontend — Aplicación Web</h2>
+    </div>
+
+    <div class="card">
+      <h3>Tecnología y modo de operación</h3>
+      <p>
+        El frontend es un <strong>HTML estático puro</strong> sin dependencias de build
+        (sin npm, sin bundler). Usa Google Fonts (Roboto + Roboto Mono) como única
+        dependencia externa. Opera en dos modos:
+      </p>
+      <table>
+        <tr><th>Modo</th><th>Condición</th><th>Descripción</th></tr>
+        <tr>
+          <td><span class="badge badge-yellow">Demo local</span></td>
+          <td><span class="mono">API_URL = ""</span></td>
+          <td>La lógica de cálculo corre en JavaScript puro, espejando los multiplicadores del modelo Python. No requiere servidor.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">En vivo</span></td>
+          <td><span class="mono">API_URL = "https://..."</span></td>
+          <td>Envía POST /predict al backend en Render. Si falla, cae automáticamente a modo demo.</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Componentes de la UI</h3>
+      <ul>
+        <li><strong>Ticker tape:</strong> barra superior animada con salarios promedio por área/cargo, datos reales del CSV</li>
+        <li><strong>Header sticky:</strong> logo SP, badge de versión del modelo y R²</li>
+        <li><strong>Formulario (panel izquierdo):</strong> 7 selectores + 1 slider de experiencia + 5 chips de herramientas. El botón se habilita solo cuando todos los campos están completos.</li>
+        <li><strong>Panel resultado (panel derecho):</strong> número animado con easing cúbico, barra de rango min → estimado → max con animación CSS, cards de tips personalizados</li>
+        <li><strong>Modo demo vs en vivo:</strong> fallback automático si el backend no responde</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Diseño visual</h3>
+      <table>
+        <tr><th>Elemento</th><th>Decisión</th></tr>
+        <tr><td>Tipografía</td><td>Roboto (Google) — estándar Material Design, alta legibilidad en pantalla</td></tr>
+        <tr><td>Color primario</td><td><span class="mono">#2563EB</span> — azul Material, distinto de la paleta de la SBP</td></tr>
+        <tr><td>Fondo</td><td><span class="mono">#F8FAFC</span> (blanco frío) — minimalista, enfocado en el contenido</td></tr>
+        <tr><td>Elevación</td><td>Box-shadow en 3 niveles (sm/md/lg) en lugar de bordes — patrón Material</td></tr>
+        <tr><td>Responsivo</td><td>Grid 2 columnas colapsas a 1 en ≤820px</td></tr>
+        <tr><td>Fuente monoespaciada</td><td>Roboto Mono — para valores numéricos y badges de código</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ 7. DESPLIEGUE ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <h2>Arquitectura de Despliegue</h2>
+    </div>
+
+    <div class="arch">
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; text-align:center;">
+        <div>
+          <div class="arch-box gray" style="margin-bottom:8px">GitHub<br><small>juanraul23/salario-correcto</small></div>
+          <div class="arch-label">Repositorio fuente</div>
+        </div>
+        <div>
+          <div class="arch-box green" style="margin-bottom:8px">Render (Free)<br><small>Backend FastAPI</small></div>
+          <div class="arch-label">API · $0/mes</div>
+        </div>
+        <div>
+          <div class="arch-box" style="margin-bottom:8px">Vercel (Hobby)<br><small>Frontend HTML</small></div>
+          <div class="arch-label">Web · $0/mes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Backend — Render</h3>
+      <table>
+        <tr><th>Parámetro</th><th>Valor</th></tr>
+        <tr><td>Plataforma</td><td>Render Free Tier</td></tr>
+        <tr><td>Root Directory</td><td class="mono">backend/</td></tr>
+        <tr><td>Build Command</td><td class="mono">pip install -r requirements.txt</td></tr>
+        <tr><td>Start Command</td><td class="mono">uvicorn main:app --host 0.0.0.0 --port $PORT</td></tr>
+        <tr><td>Runtime</td><td>Python 3.11</td></tr>
+        <tr><td>Modelo incluido</td><td class="mono">backend/modelo_salario_pa.pkl</td></tr>
+        <tr><td>Cold start</td><td>~30s (tier free) — primer request puede ser lento</td></tr>
+      </table>
+      <div class="warn">
+        El tier gratuito de Render hace "sleep" del servicio tras 15 minutos de inactividad.
+        El primer request tarda ~30 segundos. El frontend lo maneja con fallback a modo demo.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Frontend — Vercel</h3>
+      <table>
+        <tr><th>Parámetro</th><th>Valor</th></tr>
+        <tr><td>Plataforma</td><td>Vercel Hobby (free)</td></tr>
+        <tr><td>Root Directory</td><td class="mono">frontend/</td></tr>
+        <tr><td>Framework</td><td>Other (HTML estático)</td></tr>
+        <tr><td>Build Command</td><td>— (ninguno)</td></tr>
+        <tr><td>Output Directory</td><td class="mono">./</td></tr>
+        <tr><td>CDN global</td><td>Sí — Vercel Edge Network</td></tr>
+      </table>
+      <p>
+        El archivo <span class="mono">vercel.json</span> incluye un rewrite
+        <span class="mono">/(.*) → /index.html</span> para manejar rutas futuras si se
+        migra a SPA.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Estructura del repositorio</h3>
+      <pre><code>salario-correcto/
+├── CLAUDE.md                        <span class="cmt">← historial de decisiones del proyecto</span>
+├── render.yaml                      <span class="cmt">← configuración de despliegue Render</span>
+├── .gitignore
+├── data/
+│   └── salarios_referencia_panama.csv  <span class="cmt">← 54 cargos reales</span>
+├── model/
+│   ├── generar_dataset.py           <span class="cmt">← pipeline completo de entrenamiento</span>
+│   ├── modelo_salario_pa.pkl        <span class="cmt">← modelo serializado (joblib)</span>
+│   └── modelo_metadata.json         <span class="cmt">← R², MAE, versión, listas de opciones</span>
+├── backend/
+│   ├── main.py                      <span class="cmt">← API FastAPI</span>
+│   ├── requirements.txt
+│   ├── modelo_salario_pa.pkl        <span class="cmt">← copia para Render (rootDir: backend)</span>
+│   └── modelo_metadata.json
+└── frontend/
+    ├── index.html                   <span class="cmt">← app completa (modo demo + modo live)</span>
+    └── vercel.json</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Dependencias principales</h3>
+      <table>
+        <tr><th>Librería</th><th>Versión</th><th>Uso</th></tr>
+        <tr><td>fastapi</td><td class="mono">0.115.0</td><td>Framework API</td></tr>
+        <tr><td>uvicorn</td><td class="mono">0.30.6</td><td>Servidor ASGI</td></tr>
+        <tr><td>scikit-learn</td><td class="mono">1.5.2</td><td>GBR + Pipeline + Encoders</td></tr>
+        <tr><td>pandas</td><td class="mono">2.2.3</td><td>Manipulación del dataset</td></tr>
+        <tr><td>numpy</td><td class="mono">1.26.4</td><td>Operaciones numéricas</td></tr>
+        <tr><td>joblib</td><td class="mono">1.4.2</td><td>Serialización del modelo</td></tr>
+        <tr><td>pydantic</td><td class="mono">2.9.2</td><td>Validación de requests</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ 8. ROADMAP ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Roadmap de Fases</h2>
+    </div>
+    <table>
+      <tr><th>Fase</th><th>Objetivo</th><th>Estado</th></tr>
+      <tr>
+        <td>Fase 1 — Datos reales</td>
+        <td>Reemplazar dataset sintético con datos de Computrabajo + Michael Page. R² &gt; 0.70, MAE &lt; $350.</td>
+        <td><span class="badge badge-green">✓ Completado — R²=0.9952, MAE=$154</span></td>
+      </tr>
+      <tr>
+        <td>Fase 2 — Encuesta LinkedIn</td>
+        <td>Recolectar datos reales de usuarios para las 7 áreas sin datos (Ingeniería, Salud, etc.)</td>
+        <td><span class="badge badge-gray">Pendiente</span></td>
+      </tr>
+      <tr>
+        <td>Fase 3 — Percentil de mercado</td>
+        <td>Añadir "tu salario está en el top X%" a la respuesta del /predict</td>
+        <td><span class="badge badge-gray">Pendiente</span></td>
+      </tr>
+      <tr>
+        <td>Fase 4 — Comparador por provincia</td>
+        <td>Gráfico interactivo de salario estimado por provincia</td>
+        <td><span class="badge badge-gray">Pendiente</span></td>
+      </tr>
+      <tr>
+        <td>Fase 5 — Auth + historial</td>
+        <td>Autenticación de usuarios e historial de estimaciones (Supabase)</td>
+        <td><span class="badge badge-gray">Pendiente</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="doc-footer">
+    <span>SalarioPA · Informe Técnico v1.1 · Junio 2026</span>
+    <span>Datos: Computrabajo Panamá · Michael Page · Decreto N°13 Mitradel</span>
+  </div>
+
+</div>
+</body>
+</html>
